@@ -31,13 +31,13 @@ void setup() {
     digitalWrite(PUMP_PIN3, HIGH);
     digitalWrite(PUMP_PIN4, HIGH);
     digitalWrite(PUMP_PIN5, HIGH);
-    //digitalWrite(PUMP_PIN6, HIGH);
+    digitalWrite(PUMP_PIN6, HIGH);
     pinMode(PUMP_PIN1, OUTPUT);
     pinMode(PUMP_PIN2, OUTPUT);
     pinMode(PUMP_PIN3, OUTPUT);
     pinMode(PUMP_PIN4, OUTPUT);
     pinMode(PUMP_PIN5, OUTPUT);
-    //pinMode(PUMP_PIN6, OUTPUT);
+    pinMode(PUMP_PIN6, OUTPUT);
     // /***Init WI FI module with thingspeak connection***/
     // while(!ESP8266_Begin());
     // ESP8266_WIFIMode(BOTH_STATION_AND_ACCESPOINT);	/* 3 = Both (AP and STA) */
@@ -71,10 +71,21 @@ void printHumiditySoilValue(LiquidCrystal_I2C lcd, int soilMoisture, int plantNu
 }
 
 void waterPumpSystem(int soilMoisturePercent, int pump_pin){
-    if (soilMoisturePercent < 40)
+    if (soilMoisturePercent < 30)
     {
         digitalWrite(pump_pin, LOW);
-        delay(4000);
+        delay(15000);
+        digitalWrite(pump_pin, HIGH);
+    }else{
+        digitalWrite(pump_pin, HIGH);
+    }
+}
+
+void waterPumpSystemBoolean(int soilMoistureBool, int pump_pin){
+    if (soilMoistureBool)
+    {
+        digitalWrite(pump_pin, LOW);
+        delay(15000);
         digitalWrite(pump_pin, HIGH);
     }else{
         digitalWrite(pump_pin, HIGH);
@@ -102,17 +113,17 @@ void loop() {
     printHumiditySoilValue(lcd, isSoilDry2, 6);
     delay(2000);
     waterPumpSystem(soilMoisturePercent1, PUMP_PIN1);
-    delay(5000);
+    delay(20000);
     waterPumpSystem(soilMoisturePercent2, PUMP_PIN2);
-    delay(5000);
+    delay(20000);
     waterPumpSystem(soilMoisturePercent3, PUMP_PIN3);
-    delay(5000);
-    waterPumpSystem(soilMoisturePercent3, PUMP_PIN4);
-    delay(5000);
-    waterPumpSystem(soilMoisturePercent3, PUMP_PIN5);
-    delay(5000);
-    // waterPumpSystem(soilMoisturePercent3, PUMP_PIN6);
-    // delay(5000);
+    delay(20000);
+    waterPumpSystem(soilMoisturePercent4, PUMP_PIN4);
+    delay(20000);
+    waterPumpSystemBoolean(isSoilDry1, PUMP_PIN5);
+    delay(20000);
+    waterPumpSystemBoolean(isSoilDry2, PUMP_PIN6);
+    delay(20000);
     // Connect_Status = ESP8266_connected();
     // if(Connect_Status == ESP8266_NOT_CONNECTED_TO_AP)	/*Again check connection to WIFI*/
     // ESP8266_JoinAccessPoint(SSID, PASSWORD);			/*Connect to WIFI*/
